@@ -2,5 +2,5 @@ docker-compose-front.yml
 docker-compose-backend.yml
 node_modules
 package-lock.json
-.env
+backend/.env
 docker-compose.yml
