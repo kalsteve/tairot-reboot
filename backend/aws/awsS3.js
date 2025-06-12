@@ -2,10 +2,9 @@ const {
   S3Client,
   ListObjectsV2Command
 } = require('@aws-sdk/client-s3');
-
-const buckName = 'tairot';
-const fileNameListStore = new Array(78);
-const cardUrlList = new Array(78);
+const deckSize = Number(process.env.DECK_SIZE)
+const fileNameListStore = new Array(deckSize);
+const cardUrlList = new Array(deckSize);
 let client = null;
 
 /**
@@ -17,15 +16,16 @@ let client = null;
 async function initializeS3() {
   if (client) throw new Error('이미 s3Api가 초기화 되어있습니다.');
   client = new S3Client({
-    region: "us-east-1",
+    region: process.env.AWS_REGION,
     endpoint: "https://s3-api.yukey.site", // ← 필요 시 수정
     forcePathStyle: true,
     credentials: {
-      accessKeyId: "LgGqTwJtz10E2EpSwUYG",
-      secretAccessKey: "OnrlYEfCqWfZzyFjyLSfxTJB987mITHot3GDQNGP",
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
   });
-  const commend = new ListObjectsV2Command({ Bucket: buckName, MaxKeys: 78 });
+  const bucketName = process.env.BUCKET
+  const commend = new ListObjectsV2Command({ Bucket: bucketName, MaxKeys: deckSize });
   const response = await client.send(commend);
   let urlBuffer = new String();
   let count = 0;
@@ -33,7 +33,7 @@ async function initializeS3() {
   for await (const object of response.Contents) {
     const fileName = object.Key; // 파일명 저장
     fileNameListStore[count] = fileName; // 폴더명 제외 파일명 저장
-    urlBuffer = encodeURI(`https://s3-api.yukey.site/${buckName}/${fileName}`); // url 인코딩
+    urlBuffer = encodeURI(`https://s3-api.yukey.site/${bucketName}/${fileName}`); // url 인코딩
     cardUrlList[count] = urlBuffer; // url 저장
     count++;    
   }

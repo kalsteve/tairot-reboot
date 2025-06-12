@@ -47,6 +47,18 @@ services:
     restart: unless-stopped  # ← 이 줄 추가!
     ports:
       - "3001:3000"
+    environment:
+      - OPENAI_KEY=OPENAI_KEY
+      - OPENAI_AUDIO_MODEL=OPENAI_AUDIO_MODEL
+      - OPENAI_AUDIO_VOICE=OPEN
+      - MYSQL_HOST_URL=MYSQL_HOST_URL
+      - MYSQL_PASSWORD=MYSQL_PASSWORD
+      - MYSQL_USER=MYSQL_USER
+      - MYSQL_DB_NAME=MYSQL_DB_NAME
+      - CLOVA_CLIENT_SECRET=CLOVA_CLIENT_SECRET
+      - AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY
+      - AWS_REGION=AWS_REGION
     develop:
       watch:
         - action: sync
