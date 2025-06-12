@@ -7,7 +7,7 @@
     import {Configuration, OpenAI} from 'openai'
 */
 const { Configuration, OpenAI,  } = require('openai');
-const gptModel = ['gpt-3.5-turbo-1106', 'gpt-4-0125-preview'];
+const gptModel = ['gpt-3.5-turbo-1106', 'gpt-4.1-nano-2025-04-14'];
 /**
  * gpt 대화 파라메터 설정 기본 설정만 현재 설정, 추후 수정 예정
  * model : gpt 모델

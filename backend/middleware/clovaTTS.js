@@ -1,11 +1,6 @@
-const client_id = process.env.CLOVA_CLIENT_ID;
+const MODEL_NAME = process.env.OPENAI_AUDIO_MODEL;
+const MODLE_VOICE = process.env.OPENAI_AUDIO_VOICE;
 const client_secret = process.env.CLOVA_CLIENT_SECRET;
-const voiceType = {
-  name: ["nminseo", "ngoeun", "nsunhee", "nseungpyo", "nwoof"],
-  speed: [ -1, -2, -2, -2, -2],
-  pitch: [ 0, 0, 0, 0, -1],
-  alpah: [ 1, 0, 0, -2, -1],
-};
 
 
 class ClovaTTS {
@@ -18,24 +13,24 @@ class ClovaTTS {
 
   async clovaTTS(text, socket, luckType) {
     console.log('clovaTTS called text:', text);
-    const api_url = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts";
+    const api_url = "https://api.openai.com/v1/audio/speech";
     const formData = new FormData();
-    formData.append('speaker', voiceType.name[luckType - 1]);
-    formData.append('volume', '0');
-    formData.append('speed', voiceType.speed[luckType - 1]);
-    formData.append('pitch', voiceType.pitch[luckType - 1]);
-    formData.append('alpha', voiceType.alpah[luckType - 1]);
-    formData.append('text', text);
-    formData.append('format', 'mp3');
+    formData.append('model', MODEL_NAME);
+    formData.append('input', text);
+    formData.append('voice', MODLE_VOICE);
   
     try {
       const response = await fetch(api_url, {
         method: 'POST',
-        body: formData,
         headers: {
-          "X-NCP-APIGW-API-KEY-ID": client_id,
-          "X-NCP-APIGW-API-KEY": client_secret,
+          "Authorization": `Bearer ${client_secret}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          model: MODEL_NAME, // 또는 tts-1-hd
+          input: text,
+          voice: MODLE_VOICE,  // or alloy, echo, fable, onyx, shimmer
+        }),
       });
   
       if (!response.ok) {

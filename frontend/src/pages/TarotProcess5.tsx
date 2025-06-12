@@ -218,7 +218,7 @@ function TarotProcess5() {
   };
 
   useEffect(() => {
-    const socket = io("https://tairot.online/", {
+    const socket = io("https://tairot.yukey.site/", {
       auth: {
         token: accesstoken,
       },

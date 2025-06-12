@@ -44,15 +44,18 @@ services:
     build: ./backend
     image: dev_backend
     container_name: dev_backend_container
+    restart: unless-stopped  # ← 이 줄 추가!
     ports:
       - "3001:3000"
-    environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - CLOVA_CLIENT_ID=${CLOVA_CLIENT_ID}
-      - CLOVA_CLIENT_SECRET=${CLOVA_CLIENT_SECRET}
-    # volumes:
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /
+        - action: rebuild
+          path: ./backend/package.json
+
+      # volumes:
     #   - log-data:/usr/src/app/logs
       # log-data 볼륨과 /usr/src/app/logs라는 dev_backend 컨테이너 내부 경로를
       # 마운팅(링크로 연결)하여 *.log 파일들을 공유
@@ -67,31 +70,31 @@ services:
       - VITE_SHARE_KAKAO_LINK_KEY=${VITE_SHARE_KAKAO_LINK_KEY}
       - VITE_SHARE_IMGUR_CLIENT_ID=${VITE_SHARE_IMGUR_CLIENT_ID}
 
-  dev_nginx:
-    build: ./nginx
-    image: dev_nginx
-    container_name: dev_nginx_container
-    # restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /hostpath/www:/var/www/html
-      - /hostpath/certbot/etc:/etc/letsencrypt:ro
-    depends_on:
-      - dev_backend
-      - dev_frontend
+#  dev_nginx:
+#    build: ./nginx
+#    image: dev_nginx
+#    container_name: dev_nginx_container
+#    # restart: always
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - /hostpath/www:/var/www/html
+#      - /hostpath/certbot/etc:/etc/letsencrypt:ro
+#    depends_on:
+#      - dev_backend
+#      - dev_frontend
 
-  certbot:
-    image: certbot/certbot
-    container_name: dev_certbot_container
-    volumes:
-      - /hostpath/certbot/etc:/etc/letsencrypt
-      - /hostpath/certbot/var:/var/lib/letsencrypt
-      - /hostpath/www:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email tjfgkssk9472@gmail.com --agree-tos --no-eff-email --force-renewal -d tairot.online -v
-    depends_on:
-      - dev_nginx
+#  certbot:
+#    image: certbot/certbot
+#    container_name: dev_certbot_container
+#    volumes:
+#      - /hostpath/certbot/etc:/etc/letsencrypt
+#      - /hostpath/certbot/var:/var/lib/letsencrypt
+#      - /hostpath/www:/var/www/html
+#    command: certonly --webroot --webroot-path=/var/www/html --email tjfgkssk9472@gmail.com --agree-tos --no-eff-email --force-renewal -d tairot.online -v
+#    depends_on:
+#      - dev_nginx
 
   # ELK Stack 관련 Services
   # .env에 ELASTIC_VERSION=7.17.11 추가

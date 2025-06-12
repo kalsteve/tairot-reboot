@@ -3,11 +3,7 @@ const express = require("express");
 const http = require("http"); // 소켓 io 필요 모듈
 const socketIo = require("socket.io"); // 소켓 io 필요 모듈
 const cors = require("cors");
-const { configureAwsClient } = require("./aws/awsClientConfig"); // AWS 클라이언트 설정
-const { GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager"); // GetSecretValueCommand 가져오기
-const { loadDBConfig, getDBConfig } = require("./mysql/configDB");
 const db = require("./mysql/database");
-const { loadGptApiKey, initializeGpt } = require("./chatgpt/apiKey");
 const gpt = require("./chatgpt/api");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger/swagger_output.json");
@@ -18,8 +14,6 @@ const { socketSendHandler } = require("./middleware/socketHandle");
 const checkPoll = require("./middleware/checkPoll");
 const AppConfig = require("./appConfig");
 const app = express();
-const secretName = "MySQL_Info";
-const secretGptApiKey = "GPT_KEY";
 const fs = require('fs');
 const path = require('path');
 
@@ -124,16 +118,15 @@ app.use((error, req, res, next) => {
 // 서버 시작 함수
 async function startServer() {
   try {
-    const client = configureAwsClient();
-    const secrets = await client.send(
-      new GetSecretValueCommand({ SecretId: secretName })
-    );
-    await loadDBConfig(client, secretName);
-    const dbConfig = getDBConfig();
+    const dbConfig = {
+      host: process.env.MYSQL_HOST_URL,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DB_NAME,
+    }
     db.initializeConnection(dbConfig);
     // gpt api 연결
-    const gptApiKey = await loadGptApiKey(client, secretGptApiKey);
-    gpt.initializeGpt(gptApiKey);
+    gpt.initializeGpt(process.env.OPENAI_KEY);
     // s3 연결
     s3.initializeS3();
     // appConfig 객체 저장
