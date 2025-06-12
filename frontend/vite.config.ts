@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
+    allowedHosts: ['tairot.yukey.site'],
     hmr: false,
     port: 5000,
     host: true,
