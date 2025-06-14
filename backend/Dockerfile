@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # npm을 이용하여 의존성 설치 
 # package.json에 명시된 모든 패키지를 자동으로 설치
-RUN npm install && npm install @aws-sdk/client-secrets-manager
+RUN npm install
 
 # 소스 코드 복사
 # .dockerignore 제외
