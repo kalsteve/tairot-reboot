@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: "../.env" }); // 혹은 절대경로로
 const express = require("express");
 const http = require("http"); // 소켓 io 필요 모듈
 const socketIo = require("socket.io"); // 소켓 io 필요 모듈
