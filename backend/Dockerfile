@@ -1,5 +1,5 @@
 # Node.js 베이스 이미지 사용
-FROM node:latest
+FROM node:23
 
 # 작업 디렉토리 생성 및 설정
 WORKDIR /usr/src/app
