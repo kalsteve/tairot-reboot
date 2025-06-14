@@ -44,9 +44,17 @@ services:
     build: ./backend
     image: dev_backend
     container_name: dev_backend_container
-    restart: unless-stopped  # ← 이 줄 추가!
+    networks:
+      - dokploy-network
     ports:
-      - "3001:3000"
+      - 5000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && PathPrefix(`/api`, `/socket.io`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
     environment:
       - OPENAI_KEY=OPENAI_KEY
       - OPENAI_AUDIO_MODEL=OPENAI_AUDIO_MODEL
@@ -60,28 +68,35 @@ services:
       - AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY
       - AWS_REGION=AWS_REGION
       - DECK_SIZE=78
-    develop:
-      watch:
-        - action: sync
-          path: ./backend
-          target: /
-        - action: rebuild
-          path: ./backend/package.json
+
+
+  dev_frontend:
+    build: ./frontend
+    image: dev_frontend
+    container_name: dev_frontend_container
+    networks:
+      - dokploy-network
+    ports:
+      - 3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`tairot.yukey.site`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5000"
+    environment:
+      - VITE_SHARE_KAKAO_LINK_KEY=${VITE_SHARE_KAKAO_LINK_KEY}
+      - VITE_SHARE_IMGUR_CLIENT_ID=${VITE_SHARE_IMGUR_CLIENT_ID}
+
+networks:
+  dokploy-network:
+    external: true
 
       # volumes:
     #   - log-data:/usr/src/app/logs
       # log-data 볼륨과 /usr/src/app/logs라는 dev_backend 컨테이너 내부 경로를
       # 마운팅(링크로 연결)하여 *.log 파일들을 공유
 
-  dev_frontend:
-    build: ./frontend
-    image: dev_frontend
-    container_name: dev_frontend_container
-    ports:
-      - "5001:5000"
-    environment:
-      - VITE_SHARE_KAKAO_LINK_KEY=${VITE_SHARE_KAKAO_LINK_KEY}
-      - VITE_SHARE_IMGUR_CLIENT_ID=${VITE_SHARE_IMGUR_CLIENT_ID}
 
 #  dev_nginx:
 #    build: ./nginx
