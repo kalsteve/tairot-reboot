@@ -16,7 +16,7 @@ let client = null;
 async function initializeS3() {
   if (client) throw new Error('이미 s3Api가 초기화 되어있습니다.');
   client = new S3Client({
-    region: process.env.AWS_REGION || "ap-northeast-2", // 기본값 설정
+    region: 'us-east-1', // 기본값 설정
     endpoint: "https://s3-api.yukey.site", // ← 필요 시 수정
     forcePathStyle: true,
     credentials: {
