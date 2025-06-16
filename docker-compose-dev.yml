@@ -46,14 +46,12 @@ services:
     container_name: dev_backend_container
     networks:
       - dokploy-network
-    ports:
-      - 3100
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.backend.priority=1"
+      - "traefik.http.routers.backend.priority=0"
       - "traefik.http.services.backend.loadbalancer.server.port=3100"
     environment:
       - OPENAI_KEY=${OPENAI_KEY}
@@ -77,8 +75,6 @@ services:
     container_name: dev_frontend_container
     networks:
       - dokploy-network
-    ports:
-      - 5100
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`tairot.yukey.site`)"
