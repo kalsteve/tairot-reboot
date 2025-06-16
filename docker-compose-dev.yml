@@ -50,7 +50,7 @@ services:
       - "5001:5000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && PathPrefix(`/api`, `/socket.io`)"
+      - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.routers.frontend.priority=1"
