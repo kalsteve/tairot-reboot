@@ -47,7 +47,7 @@ services:
     networks:
       - dokploy-network
     ports:
-      - "5001:5000"
+      - "3001:3000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
