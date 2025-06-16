@@ -53,7 +53,7 @@ services:
       - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.routers.backend.priority=1"
       - "traefik.http.services.backend.loadbalancer.server.port=3100"
     environment:
       - OPENAI_KEY=${OPENAI_KEY}
