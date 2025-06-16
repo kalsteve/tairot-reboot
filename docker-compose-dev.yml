@@ -47,14 +47,14 @@ services:
     networks:
       - dokploy-network
     ports:
-      - "3000:3000"
+      - "3005:3000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.routers.frontend.priority=1"
-      - "traefik.http.services.backend.loadbalancer.server.port=3000"
+      - "traefik.http.services.backend.loadbalancer.server.port=3005"
     environment:
       - OPENAI_KEY=${OPENAI_KEY}
       - OPENAI_AUDIO_MODEL=${OPENAI_AUDIO_MODEL}
@@ -78,13 +78,13 @@ services:
     networks:
       - dokploy-network
     ports:
-      - "5000:5000"
+      - "5005:5000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`tairot.yukey.site`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5000"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5005"
     environment:
       - VITE_SHARE_KAKAO_LINK_KEY=${VITE_SHARE_KAKAO_LINK_KEY}
       - VITE_SHARE_IMGUR_CLIENT_ID=${VITE_SHARE_IMGUR_CLIENT_ID}
