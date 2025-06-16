@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     allowedHosts: ['tairot.yukey.site'],
     hmr: false,
-    port: 5000,
+    port: 5100,
     host: true,
     proxy: {
       //"/api": "https://tairot.online/",

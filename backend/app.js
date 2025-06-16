@@ -132,7 +132,7 @@ async function startServer() {
     // appConfig 객체 저장
     app.set("appConfig", new AppConfig());
     // 서버 시작
-    const port = 3000;
+    const port = 3100;
     // 기존 app.listen() 대신 server.listen()을 사용
     // HTTP 서버와 소켓 서버가 모두 동일한 포트로 설정
     server.listen(port, () =>
