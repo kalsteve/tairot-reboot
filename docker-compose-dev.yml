@@ -78,6 +78,10 @@ services:
       build: ./frontend
       image: dev_frontend
       container_name: dev_frontend_container
+      ulimits:
+        nofile:
+          soft: 65536
+          hard: 65536
       networks:
         - dokploy-network
       deploy:
