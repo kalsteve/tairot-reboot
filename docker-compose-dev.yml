@@ -46,6 +46,12 @@ services:
     container_name: dev_backend_container
     networks:
       - dokploy-network
+    restart: always #도커가 죽이면 자동으로 재실행
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`tairot.yukey.site`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
@@ -68,22 +74,26 @@ services:
       - DECK_SIZE=${DECK_SIZE}
       - BUCKET=${BUCKET}
 
-
   dev_frontend:
-    build: ./frontend
-    image: dev_frontend
-    container_name: dev_frontend_container
-    networks:
-      - dokploy-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`tairot.yukey.site`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5100"
-    environment:
-      - VITE_SHARE_KAKAO_LINK_KEY=${VITE_SHARE_KAKAO_LINK_KEY}
-      - VITE_SHARE_IMGUR_CLIENT_ID=${VITE_SHARE_IMGUR_CLIENT_ID}
+      build: ./frontend
+      image: dev_frontend
+      container_name: dev_frontend_container
+      networks:
+        - dokploy-network
+      deploy:
+        resources:
+          limits:
+            memory: 1G
+            cpus: '1.0'
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.frontend.rule=Host(`tairot.yukey.site`)"
+        - "traefik.http.routers.frontend.entrypoints=websecure"
+        - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+        - "traefik.http.services.frontend.loadbalancer.server.port=5100"
+      environment:
+        - VITE_SHARE_KAKAO_LINK_KEY=${VITE_SHARE_KAKAO_LINK_KEY}
+        - VITE_SHARE_IMGUR_CLIENT_ID=${VITE_SHARE_IMGUR_CLIENT_ID}
 
 networks:
   dokploy-network:
